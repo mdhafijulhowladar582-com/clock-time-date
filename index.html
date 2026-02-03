@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>All In One Digital Clock</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:black;
+  color:white;
+}
+.container{
+  display:grid;
+  gap:15px;
+  text-align:center;
+}
+
+/* COMMON BOX */
+.box{
+  padding:15px;
+  border-radius:12px;
+  background:#111;
+  box-shadow:0 0 15px rgba(0,255,255,0.5);
+}
+
+/* CLOCK */
+#time{
+  font-size:42px;
+  font-weight:600;
+  background:linear-gradient(135deg,#14ffe9,#ffeb3b,#ff00e0);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:hue 2s linear infinite;
+}
+
+/* DATE */
+#date{
+  font-size:18px;
+  opacity:.9;
+}
+
+/* BUTTON */
+button{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:linear-gradient(135deg,cyan,magenta);
+  color:black;
+  font-weight:600;
+}
+
+/* ALARM */
+input{
+  padding:8px;
+  border-radius:6px;
+  border:none;
+}
+
+/* ANIMATION */
+@keyframes hue{
+  100%{filter:hue-rotate(360deg);}
+}
+
+/* RESPONSIVE */
+@media(max-width:420px){
+  #time{font-size:32px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- CLOCK BOX -->
+  <div class="box">
+    <div id="time">00:00:00</div>
+  </div>
+
+  <!-- DATE BOX -->
+  <div class="box">
+    <div id="date">Loading date...</div>
+  </div>
+
+  <!-- THEME BOX -->
+  <div class="box">
+    <button onclick="changeTheme()">Change Theme</button>
+  </div>
+
+  <!-- ALARM BOX -->
+  <div class="box">
+    <input type="time" id="alarmTime">
+    <button onclick="setAlarm()">Set Alarm</button>
+    <div id="alarmStatus"></div>
+  </div>
+
+</div>
+
+<script>
+/* CLOCK + DATE */
+setInterval(()=>{
+  const now=new Date();
+  let h=now.getHours();
+  let m=now.getMinutes();
+  let s=now.getSeconds();
+  let ampm=h>=12?"PM":"AM";
+  h=h%12||12;
+  h=h<10?"0"+h:h;
+  m=m<10?"0"+m:m;
+  s=s<10?"0"+s:s;
+  document.getElementById("time").innerText=
+  `${h}:${m}:${s} ${ampm}`;
+  document.getElementById("date").innerText=
+  now.toDateString();
+
+  if(alarm && alarm===`${now.getHours()}:${m}`){
+    alert("⏰ Alarm Ringing!");
+    alarm=null;
+  }
+},1000);
+
+/* THEME */
+let theme=0;
+function changeTheme(){
+  const colors=[
+    "linear-gradient(135deg,cyan,magenta)",
+    "linear-gradient(135deg,lime,orange)",
+    "linear-gradient(135deg,red,blue)"
+  ];
+  document.body.style.background=colors[theme];
+  theme=(theme+1)%colors.length;
+}
+
+/* ALARM */
+let alarm=null;
+function setAlarm(){
+  alarm=document.getElementById("alarmTime").value;
+  document.getElementById("alarmStatus").innerText=
+  "Alarm set for "+alarm;
+}
+</script>
+
+</body>
+</html>
